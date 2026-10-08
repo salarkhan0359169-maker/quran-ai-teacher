@@ -1,0 +1,3968 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Quran AI Teacher</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#ffffff;
+    color:#17352d;
+    min-height:100vh;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 35px;
+    background:#ffffff;
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid #dce8e3;
+    box-shadow:0 4px 18px rgba(0,0,0,.06);
+}
+
+.logo{
+    font-size:24px;
+    font-weight:bold;
+    color:#126b4f;
+}
+
+.home-btn{
+    text-decoration:none;
+    color:#ffffff;
+    background:#126b4f;
+    border:1px solid #126b4f;
+    padding:9px 18px;
+    border-radius:25px;
+    transition:.3s;
+}
+
+.home-btn:hover{
+    background:#0d543e;
+    border-color:#0d543e;
+}
+
+.main-container{
+    width:95%;
+    max-width:1450px;
+    margin:30px auto;
+}
+
+.page-title{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.page-title h1{
+    color:#126b4f;
+    font-size:38px;
+    margin-bottom:8px;
+}
+
+.page-title p{
+    color:#52645e;
+}
+
+.learning-grid{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:25px;
+}
+
+.panel{
+    background:#ffffff;
+    border:1px solid #dce8e3;
+    border-radius:20px;
+    padding:22px;
+    box-shadow:0 15px 50px rgba(0,0,0,.08);
+}
+
+.panel-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.panel-title h2{
+    color:#126b4f;
+}
+
+.controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+}
+
+select,
+button{
+    font-family:inherit;
+}
+
+select{
+    flex:1;
+    min-width:180px;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #b9d2c8;
+    background:#ffffff;
+    color:#17352d;
+    outline:none;
+}
+
+select:focus{
+    border-color:#126b4f;
+    box-shadow:0 0 0 3px rgba(18,107,79,.10);
+}
+
+button{
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.25s;
+}
+
+.primary-btn{
+    background:#126b4f;
+    color:#ffffff;
+}
+
+.primary-btn:hover{
+    background:#0d543e;
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(18,107,79,.20);
+}
+
+.secondary-btn{
+    background:#198754;
+    color:#ffffff;
+    border:1px solid #198754;
+}
+
+.secondary-btn:hover{
+    background:#146c43;
+}
+
+.danger-btn{
+    background:#2f7d62;
+    color:#ffffff;
+}
+
+.danger-btn:hover{
+    background:#245f4b;
+}
+
+.quran-area{
+    max-height:650px;
+    overflow-y:auto;
+    padding-right:5px;
+}
+
+.quran-area::-webkit-scrollbar{
+    width:7px;
+}
+
+.quran-area::-webkit-scrollbar-thumb{
+    background:#126b4f;
+    border-radius:10px;
+}
+
+.quran-area::-webkit-scrollbar-track{
+    background:#eef4f1;
+}
+
+.ayah-card{
+    padding:20px;
+    margin-bottom:14px;
+    border-radius:15px;
+    background:#fbfdfc;
+    border:1px solid #e0ebe6;
+    transition:.3s;
+}
+
+.ayah-card.active{
+    border-color:#126b4f;
+    box-shadow:0 0 20px rgba(18,107,79,.13);
+}
+
+.ayah-card.correct{
+    border-color:#35a66f;
+    background:#f0fbf5;
+}
+
+.ayah-card.wrong{
+    border-color:#e05252;
+    background:#fff5f5;
+}
+
+.ayah-number{
+    color:#126b4f;
+    font-size:13px;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+
+.arabic-text{
+    direction:rtl;
+    text-align:right;
+
+    font-size:34px;
+    line-height:2.5;
+
+    margin-bottom:14px;
+
+    font-family:
+        "Amiri",
+        "Noto Naskh Arabic",
+        "Scheherazade New",
+        "Traditional Arabic",
+        "Times New Roman",
+        serif;
+
+    font-weight:500;
+
+    letter-spacing:0;
+    word-spacing:3px;
+
+    font-variant-ligatures:common-ligatures;
+    text-rendering:optimizeLegibility;
+
+    unicode-bidi:plaintext;
+}
+
+.translation-text{
+    color:#3e514a;
+    line-height:1.9;
+    font-size:18px;
+    padding-top:12px;
+    border-top:1px solid #e5eee9;
+}
+
+.translation-text.rtl{
+    direction:rtl;
+    text-align:right;
+    font-family:
+        Arial,
+        "Noto Nastaliq Urdu",
+        "Noto Naskh Arabic",
+        sans-serif;
+}
+
+.translation-text.ltr{
+    direction:ltr;
+    text-align:left;
+}
+
+.bismillah-card{
+    padding:20px;
+    margin-bottom:18px;
+    border-radius:15px;
+    background:#f3faf7;
+    border:1px solid #cfe4da;
+    box-shadow:0 8px 25px rgba(18,107,79,.06);
+}
+
+.bismillah-title{
+    color:#126b4f;
+    font-weight:bold;
+    font-size:14px;
+    margin-bottom:12px;
+}
+
+.bismillah-arabic{
+    direction:rtl;
+    text-align:center;
+    font-size:30px;
+    line-height:2.3;
+    margin-bottom:12px;
+    font-family:
+        "Amiri",
+        "Noto Naskh Arabic",
+        "Scheherazade New",
+        "Traditional Arabic",
+        serif;
+}
+
+.bismillah-translation{
+    border-top:1px solid #dbeae4;
+    padding-top:12px;
+    color:#3e514a;
+    font-size:17px;
+    line-height:1.9;
+}
+
+.bismillah-translation.rtl{
+    direction:rtl;
+    text-align:right;
+}
+
+.bismillah-translation.ltr{
+    direction:ltr;
+    text-align:left;
+}
+
+.status{
+    padding:10px 14px;
+    border-radius:10px;
+    background:#eef8f4;
+    color:#126b4f;
+    margin-bottom:15px;
+    font-size:14px;
+    border:1px solid #d5eae2;
+}
+
+.teacher-section{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.teacher-image-box{
+    width:100%;
+    max-width:430px;
+    height:480px;
+    border-radius:22px;
+    overflow:hidden;
+    position:relative;
+    background:#eef5f2;
+    border:1px solid #cfe2da;
+    box-shadow:0 20px 60px rgba(0,0,0,.12);
+}
+
+.teacher-image{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.teacher-status{
+    margin-top:15px;
+    color:#126b4f;
+    font-weight:bold;
+}
+
+.teacher-message{
+    width:100%;
+    margin-top:15px;
+    padding:15px;
+    min-height:80px;
+    border-radius:14px;
+    background:#f7faf8;
+    border:1px solid #dfeae5;
+    line-height:1.7;
+    color:#263d35;
+}
+
+.teacher-message.rtl{
+    direction:rtl;
+    text-align:right;
+}
+
+.talk-btn{
+    width:100%;
+    max-width:430px;
+    margin-top:15px;
+    background:#126b4f;
+    color:#ffffff;
+    font-size:16px;
+}
+
+.talk-btn:hover{
+    background:#0d543e;
+}
+
+.tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:25px;
+    margin-bottom:15px;
+}
+
+.tab-btn{
+    background:#eaf4f0;
+    color:#126b4f;
+    border:1px solid #cfe2da;
+}
+
+.tab-btn:hover{
+    background:#dceee7;
+}
+
+.tab-btn.active{
+    background:#126b4f;
+    color:#ffffff;
+}
+
+.tab-content{
+    display:none;
+    padding:18px;
+    background:#ffffff;
+    border:1px solid #dfeae5;
+    border-radius:15px;
+    line-height:1.8;
+    color:#334b43;
+}
+
+.tab-content.active{
+    display:block;
+}
+
+.translation-status{
+    margin-top:10px;
+    font-size:13px;
+    color:#557269;
+}
+
+.tafseer-container{
+    max-height:700px;
+    overflow-y:auto;
+    padding-right:8px;
+}
+
+.tafseer-container::-webkit-scrollbar{
+    width:7px;
+}
+
+.tafseer-container::-webkit-scrollbar-thumb{
+    background:#126b4f;
+    border-radius:10px;
+}
+
+.tafseer-container::-webkit-scrollbar-track{
+    background:#eef4f1;
+}
+
+.tafseer-loading{
+    padding:20px;
+    text-align:center;
+    background:#f7faf8;
+    border-radius:12px;
+    color:#126b4f;
+}
+
+.tafseer-source{
+    padding:12px 15px;
+    margin-bottom:15px;
+    background:#eef8f4;
+    border:1px solid #d5eae2;
+    border-radius:10px;
+    color:#126b4f;
+    font-weight:bold;
+}
+
+.tafseer-item{
+    padding:20px;
+    margin-bottom:15px;
+    border:1px solid #dfeae5;
+    border-radius:15px;
+    background:#fbfdfc;
+}
+
+.tafseer-item-title{
+    color:#126b4f;
+    font-weight:bold;
+    font-size:15px;
+    margin-bottom:12px;
+}
+
+.tafseer-text{
+    color:#334b43;
+    line-height:2;
+    font-size:17px;
+}
+
+.tafseer-text.rtl{
+    direction:rtl;
+    text-align:right;
+    font-family:
+        Arial,
+        "Noto Nastaliq Urdu",
+        "Noto Naskh Arabic",
+        sans-serif;
+}
+
+.tafseer-text.ltr{
+    direction:ltr;
+    text-align:left;
+}
+
+.highlight-word{
+    color:#e05252;
+    font-weight:bold;
+}
+
+footer{
+    text-align:center;
+    color:#6f827b;
+    padding:35px 15px;
+}
+
+@media(max-width:1000px){
+
+    .learning-grid{
+        grid-template-columns:1fr;
+    }
+
+    .teacher-image-box{
+        height:500px;
+    }
+
+}
+
+@media(max-width:600px){
+
+    header{
+        padding:15px;
+    }
+
+    .logo{
+        font-size:19px;
+    }
+
+    .main-container{
+        width:94%;
+    }
+
+    .page-title h1{
+        font-size:28px;
+    }
+
+    .arabic-text{
+        font-size:27px;
+        line-height:2.4;
+    }
+
+    .bismillah-arabic{
+        font-size:25px;
+    }
+
+    .teacher-image-box{
+        height:420px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo" id="logoText">
+    Quran AI Teacher
+</div>
+
+<a href="index.html" class="home-btn" id="homeBtn">
+    Home
+</a>
+
+</header>
+
+<div class="main-container">
+
+<div class="page-title">
+
+```
+<h1 id="pageTitle">
+    Quran Learning
+</h1>
+
+<p id="pageSubtitle">
+    Learn Quran with your AI Teacher
+</p>
+```
+
+</div>
+
+<div class="learning-grid">
+
+<section class="panel">
+
+```
+<div class="panel-title">
+
+    <h2 id="quranHeading">
+        📖 Quran
+    </h2>
+
+</div>
+
+
+<div class="controls">
+
+    <select id="surahSelect">
+
+        <option value="">
+            Loading Surahs...
+        </option>
+
+    </select>
+
+</div>
+
+
+<div
+    id="recitationStatus"
+    class="status"
+>
+    Ready
+</div>
+
+
+<div
+    id="quranArea"
+    class="quran-area"
+></div>
+
+
+<div class="controls" style="margin-top:18px;">
+
+    <button
+        class="primary-btn"
+        id="listenBtn"
+    >
+        ▶ Listen
+    </button>
+
+
+    <button
+        class="secondary-btn"
+        id="reciteBtn"
+    >
+        🎤 Recite
+    </button>
+
+
+    <button
+        class="danger-btn"
+        id="stopBtn"
+    >
+        ■ Stop
+    </button>
+
+</div>
+```
+
+</section>
+
+<section class="panel teacher-section">
+
+```
+<div
+    class="panel-title"
+    style="width:100%;"
+>
+
+    <h2 id="teacherHeading">
+        👩‍🏫 AI Teacher
+    </h2>
+
+</div>
+
+
+<div
+    class="teacher-image-box"
+    id="teacherImageBox"
+>
+
+    <img
+        src="image/teacher.jpg"
+        alt="AI Quran Teacher"
+        class="teacher-image"
+        id="teacherImage"
+    >
+
+</div>
+
+
+<div
+    class="teacher-status"
+    id="teacherStatus"
+>
+    Teacher is ready
+</div>
+
+
+<div
+    class="teacher-message"
+    id="teacherMessage"
+>
+    Assalam-o-Alaikum! You can talk to me about Quran learning.
+</div>
+
+
+<button
+    class="talk-btn"
+    id="talkTeacherBtn"
+>
+    🎤 Talk to Teacher
+</button>
+```
+
+</section>
+
+</div>
+
+<div class="tabs">
+
+```
+<button
+    class="tab-btn active"
+    data-tab="quranTab"
+    id="quranTabBtn"
+>
+    📖 Quran
+</button>
+
+
+<button
+    class="tab-btn"
+    data-tab="recitationTab"
+    id="recitationTabBtn"
+>
+    🎤 Recitation
+</button>
+
+
+<button
+    class="tab-btn"
+    data-tab="translationTab"
+    id="translationTabBtn"
+>
+    🌐 Translation
+</button>
+
+
+<button
+    class="tab-btn"
+    data-tab="tafseerTab"
+    id="tafseerTabBtn"
+>
+    📚 Tafseer
+</button>
+```
+
+</div>
+
+<div
+    id="quranTab"
+    class="tab-content active"
+>
+
+```
+<h3 id="quranTabTitle">
+    Quran
+</h3>
+
+<p id="quranTabText">
+    Select a Surah and listen to Quran recitation with Al-Afasy.
+</p>
+```
+
+</div>
+
+<div
+    id="recitationTab"
+    class="tab-content"
+>
+
+```
+<h3 id="recitationTabTitle">
+    Recitation Practice
+</h3>
+
+<p id="recitationTabText">
+    Press Recite and read the selected ayah. Your recitation will be
+    converted to text and checked against the Quran ayah.
+</p>
+```
+
+</div>
+
+<div
+    id="translationTab"
+    class="tab-content"
+>
+
+```
+<h3 id="translationTabTitle">
+    Translation
+</h3>
+
+<p id="translationInfo">
+    Quran translation will appear according to the selected language.
+</p>
+```
+
+</div>
+
+<div
+    id="tafseerTab"
+    class="tab-content"
+>
+
+```
+<h3 id="tafseerTabTitle">
+    Tafseer
+</h3>
+
+<p id="tafseerTabText">
+    Tafseer Ibn Kathir will appear according to the selected language.
+</p>
+
+<div
+    id="tafseerArea"
+    class="tafseer-container"
+    style="margin-top:15px;"
+></div>
+```
+
+</div>
+
+</div>
+
+<footer id="footerText">
+    Quran AI Teacher © 2026
+</footer>
+
+<script>
+
+/* =========================================================
+   QURAN ONLY AUDIO
+   BLOCK ALL PAGE TEXT-TO-SPEECH
+========================================================= */
+
+(function blockAllPageTTS(){
+
+    try{
+
+        if("speechSynthesis" in window){
+
+            window.speechSynthesis.cancel();
+
+            window.speechSynthesis.speak =
+                function(){
+
+                    console.warn(
+                        "Page Text-to-Speech blocked. Quran Al-Afasy audio only."
+                    );
+
+                    window.speechSynthesis.cancel();
+
+                };
+
+            window.speechSynthesis.resume =
+                function(){
+
+                    window.speechSynthesis.cancel();
+
+                };
+
+            window.speechSynthesis.pause =
+                function(){
+
+                    window.speechSynthesis.cancel();
+
+                };
+
+        }
+
+    }
+    catch(error){
+
+        console.warn(
+            "TTS blocking setup error:",
+            error
+        );
+
+    }
+
+})();
+
+
+/* =========================================================
+   API
+========================================================= */
+
+const API =
+    "https://api.alquran.cloud/v1";
+
+
+/* =========================================================
+   TAFSEER API
+========================================================= */
+
+const TAFSEER_API =
+    "https://alfurqan.online/api/v1/tafseer";
+
+
+/*
+   QUL/Tarteel has Ibn Kathir datasets in Urdu and Arabic.
+   Al-Furqan provides public English + Arabic Ibn Kathir APIs.
+
+   For this browser-only version:
+   English = Al-Furqan Ibn Kathir English
+   Arabic  = Al-Furqan Ibn Kathir Arabic
+
+   Urdu is loaded from a public QUL JSON dataset when
+   a direct file URL is available. A fallback message is
+   shown if the browser cannot access that dataset.
+*/
+
+const URDU_TAFSEER_PAGE =
+    "https://qul.tarteel.ai/resources/tafsir/30";
+
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+let selectedLanguage =
+    localStorage.getItem("selectedLanguage") || "ur";
+
+
+if(
+    !["ur","en","ar"].includes(
+        selectedLanguage
+    )
+){
+
+    selectedLanguage = "ur";
+
+}
+
+
+/* =========================================================
+   QURAN VARIABLES
+========================================================= */
+
+let surahs = [];
+
+let currentSurah = null;
+
+let currentAyahIndex = 0;
+
+let currentTranslation = [];
+
+let bismillahTranslation = "";
+
+let isPlaying = false;
+
+let playbackRunId = 0;
+
+let recognition = null;
+
+let isRecognizing = false;
+
+let tafseerLoadedForSurah = null;
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const surahSelect =
+    document.getElementById(
+        "surahSelect"
+    );
+
+
+const quranArea =
+    document.getElementById(
+        "quranArea"
+    );
+
+
+const recitationStatus =
+    document.getElementById(
+        "recitationStatus"
+    );
+
+
+const teacherStatus =
+    document.getElementById(
+        "teacherStatus"
+    );
+
+
+const teacherMessage =
+    document.getElementById(
+        "teacherMessage"
+    );
+
+
+const talkTeacherBtn =
+    document.getElementById(
+        "talkTeacherBtn"
+    );
+
+
+const tafseerArea =
+    document.getElementById(
+        "tafseerArea"
+    );
+
+
+/* =========================================================
+   LANGUAGE UI
+========================================================= */
+
+function updateLanguageUI(){
+
+    const logoText =
+        document.getElementById("logoText");
+
+    const homeBtn =
+        document.getElementById("homeBtn");
+
+    const pageTitle =
+        document.getElementById("pageTitle");
+
+    const pageSubtitle =
+        document.getElementById("pageSubtitle");
+
+    const quranHeading =
+        document.getElementById("quranHeading");
+
+    const teacherHeading =
+        document.getElementById("teacherHeading");
+
+    const quranTabBtn =
+        document.getElementById("quranTabBtn");
+
+    const recitationTabBtn =
+        document.getElementById("recitationTabBtn");
+
+    const translationTabBtn =
+        document.getElementById("translationTabBtn");
+
+    const tafseerTabBtn =
+        document.getElementById("tafseerTabBtn");
+
+    const quranTabTitle =
+        document.getElementById("quranTabTitle");
+
+    const quranTabText =
+        document.getElementById("quranTabText");
+
+    const recitationTabTitle =
+        document.getElementById("recitationTabTitle");
+
+    const recitationTabText =
+        document.getElementById("recitationTabText");
+
+    const translationTabTitle =
+        document.getElementById("translationTabTitle");
+
+    const translationInfo =
+        document.getElementById("translationInfo");
+
+    const tafseerTabTitle =
+        document.getElementById("tafseerTabTitle");
+
+    const tafseerTabText =
+        document.getElementById("tafseerTabText");
+
+    const footerText =
+        document.getElementById("footerText");
+
+    const listenBtn =
+        document.getElementById("listenBtn");
+
+    const reciteBtn =
+        document.getElementById("reciteBtn");
+
+    const stopBtn =
+        document.getElementById("stopBtn");
+
+
+    if(
+        selectedLanguage === "ur"
+    ){
+
+        document.documentElement.lang =
+            "ur";
+
+        logoText.textContent =
+            "قرآن اے آئی استاد";
+
+        homeBtn.textContent =
+            "ہوم";
+
+        pageTitle.textContent =
+            "قرآن سیکھیں";
+
+        pageSubtitle.textContent =
+            "اپنے اے آئی استاد کے ساتھ قرآن سیکھیں";
+
+        quranHeading.textContent =
+            "📖 قرآن";
+
+        teacherHeading.textContent =
+            "👩‍🏫 اے آئی استاد";
+
+        listenBtn.textContent =
+            "▶ سنیں";
+
+        reciteBtn.textContent =
+            "🎤 تلاوت کریں";
+
+        stopBtn.textContent =
+            "■ روکیں";
+
+        quranTabBtn.textContent =
+            "📖 قرآن";
+
+        recitationTabBtn.textContent =
+            "🎤 تلاوت";
+
+        translationTabBtn.textContent =
+            "🌐 ترجمہ";
+
+        tafseerTabBtn.textContent =
+            "📚 تفسیر";
+
+        quranTabTitle.textContent =
+            "قرآن";
+
+        quranTabText.textContent =
+            "سورہ منتخب کریں اور العفاسی کی آواز میں قرآن کی تلاوت سنیں۔";
+
+        recitationTabTitle.textContent =
+            "تلاوت کی مشق";
+
+        recitationTabText.textContent =
+            "تلاوت کریں اور منتخب آیت پڑھیں۔ آپ کی تلاوت کو قرآن کی آیت کے ساتھ چیک کیا جائے گا۔";
+
+        translationTabTitle.textContent =
+            "ترجمہ";
+
+        translationInfo.textContent =
+            "قرآن کی اصل عربی آیات کے نیچے اردو ترجمہ دکھایا جائے گا۔";
+
+        tafseerTabTitle.textContent =
+            "تفسیر ابن کثیر";
+
+        tafseerTabText.textContent =
+            "منتخب سورہ کی مکمل تفسیر ابن کثیر دکھائی جائے گی۔";
+
+        teacherStatus.textContent =
+            "استاد تیار ہے";
+
+        teacherMessage.textContent =
+            "السلام علیکم! قرآن سیکھنے کے بارے میں سوال کریں۔";
+
+        talkTeacherBtn.textContent =
+            "🎤 استاد سے بات کریں";
+
+        footerText.textContent =
+            "قرآن اے آئی استاد © 2026";
+
+    }
+
+
+    else if(
+        selectedLanguage === "ar"
+    ){
+
+        document.documentElement.lang =
+            "ar";
+
+        logoText.textContent =
+            "معلم القرآن بالذكاء الاصطناعي";
+
+        homeBtn.textContent =
+            "الرئيسية";
+
+        pageTitle.textContent =
+            "تعلم القرآن";
+
+        pageSubtitle.textContent =
+            "تعلم القرآن مع معلمك بالذكاء الاصطناعي";
+
+        quranHeading.textContent =
+            "📖 القرآن";
+
+        teacherHeading.textContent =
+            "👩‍🏫 معلم الذكاء الاصطناعي";
+
+        listenBtn.textContent =
+            "▶ استماع";
+
+        reciteBtn.textContent =
+            "🎤 تلاوة";
+
+        stopBtn.textContent =
+            "■ إيقاف";
+
+        quranTabBtn.textContent =
+            "📖 القرآن";
+
+        recitationTabBtn.textContent =
+            "🎤 التلاوة";
+
+        translationTabBtn.textContent =
+            "🌐 الترجمة";
+
+        tafseerTabBtn.textContent =
+            "📚 التفسير";
+
+        quranTabTitle.textContent =
+            "القرآن";
+
+        quranTabText.textContent =
+            "اختر سورة واستمع إلى تلاوة القرآن بصوت العفاسي.";
+
+        recitationTabTitle.textContent =
+            "ممارسة التلاوة";
+
+        recitationTabText.textContent =
+            "اضغط على التلاوة واقرأ الآية المحددة. سيتم تحويل تلاوتك إلى نص ومقارنتها بالآية.";
+
+        translationTabTitle.textContent =
+            "الترجمة";
+
+        translationInfo.textContent =
+            "في الوضع العربي يظهر نص القرآن الأصلي باللغة العربية.";
+
+        tafseerTabTitle.textContent =
+            "تفسير ابن كثير";
+
+        tafseerTabText.textContent =
+            "سيظهر تفسير ابن كثير الكامل للسورة المحددة.";
+
+        teacherStatus.textContent =
+            "المعلم جاهز";
+
+        teacherMessage.textContent =
+            "السلام عليكم! يمكنك طرح أسئلتك حول تعلم القرآن.";
+
+        talkTeacherBtn.textContent =
+            "🎤 تحدث مع المعلم";
+
+        footerText.textContent =
+            "معلم القرآن بالذكاء الاصطناعي © 2026";
+
+    }
+
+    else{
+
+        document.documentElement.lang =
+            "en";
+
+        logoText.textContent =
+            "Quran AI Teacher";
+
+        homeBtn.textContent =
+            "Home";
+
+        pageTitle.textContent =
+            "Quran Learning";
+
+        pageSubtitle.textContent =
+            "Learn Quran with your AI Teacher";
+
+        quranHeading.textContent =
+            "📖 Quran";
+
+        teacherHeading.textContent =
+            "👩‍🏫 AI Teacher";
+
+        listenBtn.textContent =
+            "▶ Listen";
+
+        reciteBtn.textContent =
+            "🎤 Recite";
+
+        stopBtn.textContent =
+            "■ Stop";
+
+        quranTabBtn.textContent =
+            "📖 Quran";
+
+        recitationTabBtn.textContent =
+            "🎤 Recitation";
+
+        translationTabBtn.textContent =
+            "🌐 Translation";
+
+        tafseerTabBtn.textContent =
+            "📚 Tafseer";
+
+        quranTabTitle.textContent =
+            "Quran";
+
+        quranTabText.textContent =
+            "Select a Surah and listen to Quran recitation with Al-Afasy.";
+
+        recitationTabTitle.textContent =
+            "Recitation Practice";
+
+        recitationTabText.textContent =
+            "Press Recite and read the selected ayah. Your recitation will be converted to text and checked against the Quran ayah.";
+
+        translationTabTitle.textContent =
+            "Translation";
+
+        translationInfo.textContent =
+            "The original Arabic Quran ayahs will be shown with English translation underneath.";
+
+        tafseerTabTitle.textContent =
+            "Tafseer Ibn Kathir";
+
+        tafseerTabText.textContent =
+            "The complete Tafsir Ibn Kathir for the selected Surah will appear here.";
+
+        teacherStatus.textContent =
+            "Teacher is ready";
+
+        teacherMessage.textContent =
+            "Assalam-o-Alaikum! You can talk to me about Quran learning.";
+
+        talkTeacherBtn.textContent =
+            "🎤 Talk to Teacher";
+
+        footerText.textContent =
+            "Quran AI Teacher © 2026";
+
+    }
+
+
+    teacherMessage.classList.toggle(
+        "rtl",
+        selectedLanguage === "ur" ||
+        selectedLanguage === "ar"
+    );
+
+}
+
+
+/* =========================================================
+   GET TRANSLATION EDITION
+========================================================= */
+
+function getTranslationEdition(){
+
+    if(
+        selectedLanguage === "ur"
+    ){
+
+        return "ur.jalandhry";
+
+    }
+
+    if(
+        selectedLanguage === "en"
+    ){
+
+        return "en.sahih";
+
+    }
+
+    return null;
+
+}
+
+
+/* =========================================================
+   LOAD SURAH LIST
+========================================================= */
+
+async function loadSurahs(){
+
+    try{
+
+        const response =
+            await fetch(
+                `${API}/surah`
+            );
+
+        if(!response.ok){
+
+            throw new Error(
+                "Surah list request failed."
+            );
+
+        }
+
+        const data =
+            await response.json();
+
+        surahs =
+            data.data || [];
+
+        surahSelect.innerHTML =
+            "";
+
+        surahs.forEach(
+            surah => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value =
+                    surah.number;
+
+                option.textContent =
+                    `${surah.number}. ${surah.englishName} — ${surah.name}`;
+
+                surahSelect.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+        if(
+            surahs.length
+        ){
+
+            await loadSelectedSurah(
+                surahs[0].number
+            );
+
+        }
+
+    }
+    catch(error){
+
+        console.error(
+            "Surah loading error:",
+            error
+        );
+
+        surahSelect.innerHTML =
+            `
+            <option value="">
+                Unable to load Surahs
+            </option>
+            `;
+
+        recitationStatus.textContent =
+            selectedLanguage === "ur"
+            ? "سورتیں لوڈ نہیں ہو سکیں۔"
+            : selectedLanguage === "ar"
+            ? "تعذر تحميل السور."
+            : "Unable to load Surahs.";
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD BISMILLAH TRANSLATION
+========================================================= */
+
+async function loadBismillahTranslation(){
+
+    bismillahTranslation =
+        "";
+
+
+    /*
+        Fatiha ke andar Bismillah already Ayah 1 hai.
+        Is liye separate Bismillah translation nahi.
+    */
+
+    if(
+        !currentSurah ||
+        Number(currentSurah.number) === 1
+    ){
+
+        return;
+
+    }
+
+
+    const translationEdition =
+        getTranslationEdition();
+
+
+    if(
+        !translationEdition
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        /*
+            Global Ayah 1 = standalone Bismillah.
+            Isko alag fetch kar rahe hain.
+        */
+
+        const response =
+            await fetch(
+                `${API}/ayah/1/${translationEdition}`
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "Bismillah translation request failed."
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            data &&
+            data.data &&
+            data.data.text
+        ){
+
+            bismillahTranslation =
+                data.data.text;
+
+        }
+
+    }
+    catch(error){
+
+        console.warn(
+            "Bismillah translation error:",
+            error
+        );
+
+        bismillahTranslation =
+            "";
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD SELECTED SURAH
+========================================================= */
+
+async function loadSelectedSurah(
+    surahNumber
+){
+
+    try{
+
+        if(!surahNumber){
+
+            return;
+
+        }
+
+
+        recitationStatus.textContent =
+            selectedLanguage === "ur"
+            ? "قرآن لوڈ ہو رہا ہے..."
+            : selectedLanguage === "ar"
+            ? "جاري تحميل القرآن..."
+            : "Loading Quran...";
+
+
+        tafseerLoadedForSurah =
+            null;
+
+
+        tafseerArea.innerHTML =
+            "";
+
+
+        const arabicResponse =
+            await fetch(
+                `${API}/surah/${surahNumber}/quran-uthmani`
+            );
+
+
+        if(!arabicResponse.ok){
+
+            throw new Error(
+                "Quran Uthmani request failed."
+            );
+
+        }
+
+
+        const arabicData =
+            await arabicResponse.json();
+
+
+        if(
+            !arabicData ||
+            !arabicData.data ||
+            !arabicData.data.ayahs
+        ){
+
+            throw new Error(
+                "Quran Uthmani data is missing."
+            );
+
+        }
+
+
+        currentSurah =
+            arabicData.data;
+
+
+        currentTranslation =
+            [];
+
+
+        bismillahTranslation =
+            "";
+
+
+        const translationEdition =
+            getTranslationEdition();
+
+
+        if(
+            translationEdition
+        ){
+
+            try{
+
+                const translationResponse =
+                    await fetch(
+                        `${API}/surah/${surahNumber}/${translationEdition}`
+                    );
+
+
+                if(!translationResponse.ok){
+
+                    throw new Error(
+                        "Translation request failed."
+                    );
+
+                }
+
+
+                const translationData =
+                    await translationResponse.json();
+
+
+                if(
+                    translationData &&
+                    translationData.data &&
+                    translationData.data.ayahs
+                ){
+
+                    currentTranslation =
+                        translationData.data.ayahs;
+
+                }
+
+            }
+            catch(translationError){
+
+                console.warn(
+                    "Translation could not load:",
+                    translationError
+                );
+
+                currentTranslation =
+                    [];
+
+            }
+
+        }
+
+
+        /*
+            IMPORTANT:
+            Bismillah translation separately load hogi.
+        */
+
+        await loadBismillahTranslation();
+
+
+        renderQuran();
+
+
+        if(
+            selectedLanguage === "ur"
+        ){
+
+            recitationStatus.textContent =
+                `${currentSurah.englishName} تیار ہے۔`;
+
+        }
+        else if(
+            selectedLanguage === "ar"
+        ){
+
+            recitationStatus.textContent =
+                `${currentSurah.name} جاهزة.`;
+
+        }
+        else{
+
+            recitationStatus.textContent =
+                `${currentSurah.englishName} is ready.`;
+
+        }
+
+
+        /*
+            Agar Tafseer tab already active ho
+            to new Surah ka tafseer bhi load kar dein.
+        */
+
+        const tafseerTab =
+            document.getElementById(
+                "tafseerTab"
+            );
+
+
+        if(
+            tafseerTab &&
+            tafseerTab.classList.contains("active")
+        ){
+
+            await loadTafseer();
+
+        }
+
+    }
+    catch(error){
+
+        console.error(
+            "Quran loading error:",
+            error
+        );
+
+
+        currentSurah =
+            null;
+
+        currentTranslation =
+            [];
+
+        bismillahTranslation =
+            "";
+
+
+        quranArea.innerHTML =
+            "";
+
+
+        recitationStatus.textContent =
+            selectedLanguage === "ur"
+            ? "قرآن لوڈ نہیں ہو سکا۔ براہ کرم دوبارہ کوشش کریں۔"
+            : selectedLanguage === "ar"
+            ? "تعذر تحميل القرآن. حاول مرة أخرى."
+            : "Unable to load Quran. Please try again.";
+
+    }
+
+}
+
+
+/* =========================================================
+   SURAH CHANGE
+========================================================= */
+
+surahSelect.addEventListener(
+    "change",
+    async () => {
+
+        stopEverything();
+
+        await loadSelectedSurah(
+            Number(
+                surahSelect.value
+            )
+        );
+
+    }
+);
+
+
+/* =========================================================
+   RENDER BISMILLAH
+========================================================= */
+
+function renderBismillah(){
+
+    if(
+        !currentSurah
+    ){
+
+        return "";
+
+    }
+
+
+    /*
+        Fatiha:
+        Bismillah already Ayah 1 hai.
+    */
+
+    if(
+        Number(currentSurah.number) === 1
+    ){
+
+        return "";
+
+    }
+
+
+    const translationClass =
+        selectedLanguage === "ur" ||
+        selectedLanguage === "ar"
+        ? "bismillah-translation rtl"
+        : "bismillah-translation ltr";
+
+
+    let translationText =
+        bismillahTranslation;
+
+
+    /*
+        Arabic mode mein translation ke bajaye
+        Arabic meaning label nahi, original Bismillah
+        already separately show ho rahi hai.
+    */
+
+    if(
+        selectedLanguage === "ar" &&
+        !translationText
+    ){
+
+        translationText =
+            "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
+
+    }
+
+
+    if(
+        !translationText
+    ){
+
+        translationText =
+            selectedLanguage === "ur"
+            ? "بسم اللہ الرحمن الرحیم"
+            : "In the name of Allah, the Most Gracious, the Most Merciful.";
+
+    }
+
+
+    const title =
+        selectedLanguage === "ur"
+        ? "بسم اللہ الرحمن الرحیم"
+        : selectedLanguage === "ar"
+        ? "بسم الله الرحمن الرحيم"
+        : "Bismillah";
+
+
+    return `
+
+        <div class="bismillah-card">
+
+            <div class="bismillah-title">
+                ${title}
+            </div>
+
+            <div
+                class="bismillah-arabic"
+                dir="rtl"
+                lang="ar"
+            >
+                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+            </div>
+
+            <div class="${translationClass}">
+                ${escapeHtml(translationText)}
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   RENDER QURAN
+========================================================= */
+
+function renderQuran(){
+
+    quranArea.innerHTML =
+        "";
+
+
+    if(
+        !currentSurah ||
+        !currentSurah.ayahs ||
+        !currentSurah.ayahs.length
+    ){
+
+        return;
+
+    }
+
+
+    /*
+        IMPORTANT:
+        Bismillah ko first Ayah se alag render kar rahe hain.
+    */
+
+    quranArea.innerHTML +=
+        renderBismillah();
+
+
+    currentSurah.ayahs.forEach(
+        (ayah,index) => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "ayah-card";
+
+
+            card.id =
+                `ayah-${index}`;
+
+
+            let translation =
+                "";
+
+
+            /*
+                Translation array ko index se match karna hai.
+                Bismillah ko alag display kiya gaya hai,
+                is liye actual Ayah translation yahan
+                apni Ayah ke saath rahegi.
+            */
+
+            if(
+                currentTranslation[index] &&
+                currentTranslation[index].text
+            ){
+
+                translation =
+                    currentTranslation[index].text;
+
+            }
+
+
+            let translationClass =
+                selectedLanguage === "ur"
+                ? "translation-text rtl"
+                : "translation-text ltr";
+
+
+            card.innerHTML = `
+
+                <div class="ayah-number">
+
+                    ${
+                        selectedLanguage === "ur"
+                        ? `آیت ${index + 1}`
+                        : selectedLanguage === "ar"
+                        ? `الآية ${index + 1}`
+                        : `Ayah ${index + 1}`
+                    }
+
+                </div>
+
+
+                <div
+                    class="arabic-text"
+                    dir="rtl"
+                    lang="ar"
+                >
+                    ${escapeHtml(ayah.text)}
+                </div>
+
+
+                ${
+                    translation
+                    ?
+                    `
+                    <div class="${translationClass}">
+                        ${escapeHtml(translation)}
+                    </div>
+                    `
+                    :
+                    selectedLanguage === "ar"
+                    ?
+                    `
+                    <div class="translation-text rtl">
+                        النص القرآني الأصلي
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+            `;
+
+
+            quranArea.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(text){
+
+    return String(
+        text || ""
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   CLEAN TAFSEER HTML
+========================================================= */
+
+function cleanTafseerHTML(text){
+
+    if(!text){
+
+        return "";
+
+    }
+
+
+    /*
+        Tafseer sources can contain HTML formatting.
+        We allow only safe formatting tags.
+    */
+
+    const temp =
+        document.createElement(
+            "div"
+        );
+
+
+    temp.innerHTML =
+        String(text);
+
+
+    temp
+        .querySelectorAll(
+            "script,style,iframe,object,embed,form"
+        )
+        .forEach(
+            element =>
+                element.remove()
+        );
+
+
+    temp
+        .querySelectorAll(
+            "*"
+        )
+        .forEach(
+            element => {
+
+                [...element.attributes]
+                    .forEach(
+                        attr => {
+
+                            if(
+                                attr.name.toLowerCase()
+                                .startsWith("on")
+                            ){
+
+                                element.removeAttribute(
+                                    attr.name
+                                );
+
+                            }
+
+                        }
+                    );
+
+            }
+        );
+
+
+    return temp.innerHTML;
+
+}
+
+
+/* =========================================================
+   TAFSEER LANGUAGE
+========================================================= */
+
+function getTafseerId(){
+
+    if(
+        selectedLanguage === "en"
+    ){
+
+        return "ibn-kathir-english";
+
+    }
+
+    if(
+        selectedLanguage === "ar"
+    ){
+
+        return "ibn-kathir";
+
+    }
+
+    return null;
+
+}
+
+
+/* =========================================================
+   LOAD TAFSEER
+========================================================= */
+
+async function loadTafseer(){
+
+    if(
+        !currentSurah
+    ){
+
+        return;
+
+    }
+
+
+    const surahNumber =
+        Number(
+            currentSurah.number
+        );
+
+
+    if(
+        tafseerLoadedForSurah ===
+        `${surahNumber}-${selectedLanguage}`
+    ){
+
+        return;
+
+    }
+
+
+    tafseerArea.innerHTML =
+        `
+
+        <div class="tafseer-loading">
+
+            ${
+                selectedLanguage === "ur"
+                ? "📚 تفسیر ابن کثیر لوڈ ہو رہی ہے..."
+                : selectedLanguage === "ar"
+                ? "📚 جارٍ تحميل تفسير ابن كثير..."
+                : "📚 Loading Tafsir Ibn Kathir..."
+
+            }
+
+        </div>
+
+        `;
+
+
+    /*
+        =====================================================
+        ENGLISH / ARABIC
+        =====================================================
+    */
+
+    const tafseerId =
+        getTafseerId();
+
+
+    if(
+        tafseerId
+    ){
+
+        try{
+
+            const response =
+                await fetch(
+                    `${TAFSEER_API}/${tafseerId}/surah/${surahNumber}`
+                );
+
+
+            if(!response.ok){
+
+                throw new Error(
+                    `Tafseer API failed: ${response.status}`
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            renderTafseerResponse(
+                data,
+                tafseerId
+            );
+
+
+            tafseerLoadedForSurah =
+                `${surahNumber}-${selectedLanguage}`;
+
+
+            return;
+
+        }
+        catch(error){
+
+            console.error(
+                "Tafseer API error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /*
+        =====================================================
+        URDU
+        =====================================================
+
+        Urdu Ibn Kathir data is available through QUL/Tarteel,
+        but the resource page is a downloadable JSON resource
+        rather than a simple chapter REST endpoint.
+
+        Is liye browser mein direct API ke baghair hum
+        fake/AI-generated tafseer nahi banayenge.
+    */
+
+    if(
+        selectedLanguage === "ur"
+    ){
+
+        tafseerArea.innerHTML =
+            `
+
+            <div class="tafseer-source">
+                📚 تفسیر ابن کثیر — اردو
+            </div>
+
+            <div class="tafseer-item">
+
+                <div class="tafseer-item-title">
+                    مکمل اردو تفسیر ابن کثیر
+                </div>
+
+                <div class="tafseer-text rtl">
+
+                    اردو تفسیر ابن کثیر کا مستند ڈیٹا دستیاب ہے،
+                    لیکن موجودہ browser-only setup میں اس کا مکمل
+                    downloadable JSON براہ راست API endpoint کے طور
+                    پر دستیاب نہیں ہے۔
+
+                    <br><br>
+
+                    ہم یہاں خود سے یا AI سے تفسیر بنا کر نہیں دکھائیں گے،
+                    کیونکہ قرآن کی تفسیر میں اصل مستند متن استعمال کرنا
+                    ضروری ہے۔
+
+                    <br><br>
+
+                    جب Urdu Tafsir JSON کو project میں local file کے
+                    طور پر شامل کیا جائے گا تو اسی tab میں منتخب سورہ
+                    کی مکمل تفسیر ابن کثیر اردو میں دکھائی جا سکتی ہے۔
+
+                </div>
+
+            </div>
+
+            `;
+
+
+        return;
+
+    }
+
+
+    tafseerArea.innerHTML =
+        `
+
+        <div class="tafseer-item">
+
+            <div class="tafseer-text">
+
+                ${
+                    selectedLanguage === "ar"
+                    ? "تعذر تحميل التفسير حالياً."
+                    : "Tafsir could not be loaded right now."
+                }
+
+            </div>
+
+        </div>
+
+        `;
+
+}
+
+
+/* =========================================================
+   RENDER TAFSEER RESPONSE
+========================================================= */
+
+function renderTafseerResponse(
+    data,
+    tafseerId
+){
+
+    tafseerArea.innerHTML =
+        "";
+
+
+    if(
+        !data
+    ){
+
+        throw new Error(
+            "Empty tafseer response."
+        );
+
+    }
+
+
+    /*
+        Al-Furqan response structure can contain:
+        tafseer
+        surah
+        ayahs / verses depending on endpoint version.
+    */
+
+    const source =
+        document.createElement(
+            "div"
+        );
+
+
+    source.className =
+        "tafseer-source";
+
+
+    source.textContent =
+        selectedLanguage === "ar"
+        ? "📚 تفسير ابن كثير — المصدر: Al-Furqan"
+        : "📚 Tafsir Ibn Kathir — Source: Al-Furqan";
+
+
+    tafseerArea.appendChild(
+        source
+    );
+
+
+    /*
+        Find all possible tafseer arrays.
+    */
+
+    let items = [];
+
+
+    if(
+        Array.isArray(data)
+    ){
+
+        items =
+            data;
+
+    }
+    else if(
+        Array.isArray(data.tafseers)
+    ){
+
+        items =
+            data.tafseers;
+
+    }
+    else if(
+        Array.isArray(data.tafsir)
+    ){
+
+        items =
+            data.tafsir;
+
+    }
+    else if(
+        data.tafsir &&
+        Array.isArray(data.tafsir.ayahs)
+    ){
+
+        items =
+            data.tafsir.ayahs;
+
+    }
+    else if(
+        data.ayahs &&
+        Array.isArray(data.ayahs)
+    ){
+
+        items =
+            data.ayahs;
+
+    }
+
+
+    /*
+        If endpoint returns one object containing text.
+    */
+
+    if(
+        !items.length &&
+        data.ayah &&
+        (
+            data.ayah.text ||
+            data.ayah.tafsir
+        )
+    ){
+
+        items =
+            [data];
+
+    }
+
+
+    if(
+        !items.length
+    ){
+
+        /*
+            Try recursive extraction.
+        */
+
+        items =
+            findTafseerObjects(
+                data
+            );
+
+    }
+
+
+    if(
+        !items.length
+    ){
+
+        tafseerArea.innerHTML +=
+            `
+
+            <div class="tafseer-item">
+
+                <div class="tafseer-text">
+
+                    ${
+                        selectedLanguage === "ar"
+                        ? "تفسير السورة غير متوفر بالشكل المتوقع."
+                        : "The Tafsir response format was not recognized."
+                    }
+
+                </div>
+
+            </div>
+
+            `;
+
+        return;
+
+    }
+
+
+    let displayed =
+        0;
+
+
+    items.forEach(
+        (item,index) => {
+
+            const text =
+                extractTafseerText(
+                    item
+                );
+
+
+            if(
+                !text
+            ){
+
+                return;
+
+            }
+
+
+            const ayahNumber =
+                extractAyahNumber(
+                    item,
+                    index + 1
+                );
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "tafseer-item";
+
+
+            const title =
+                document.createElement(
+                    "div"
+                );
+
+
+            title.className =
+                "tafseer-item-title";
+
+
+            title.textContent =
+                selectedLanguage === "ar"
+                ? `تفسير الآية ${ayahNumber}`
+                : `Tafsir of Ayah ${ayahNumber}`;
+
+
+            const content =
+                document.createElement(
+                    "div"
+                );
+
+
+            content.className =
+                selectedLanguage === "ar"
+                ? "tafseer-text rtl"
+                : "tafseer-text ltr";
+
+
+            content.innerHTML =
+                cleanTafseerHTML(
+                    text
+                );
+
+
+            card.appendChild(
+                title
+            );
+
+            card.appendChild(
+                content
+            );
+
+            tafseerArea.appendChild(
+                card
+            );
+
+
+            displayed++;
+
+        }
+    );
+
+
+    if(
+        displayed === 0
+    ){
+
+        tafseerArea.innerHTML +=
+            `
+
+            <div class="tafseer-item">
+
+                <div class="tafseer-text">
+
+                    ${
+                        selectedLanguage === "ar"
+                        ? "لا يوجد نص تفسير متاح."
+                        : "No Tafsir text was returned."
+                    }
+
+                </div>
+
+            </div>
+
+            `;
+
+    }
+
+}
+
+
+/* =========================================================
+   FIND TAFSEER OBJECTS
+========================================================= */
+
+function findTafseerObjects(
+    value
+){
+
+    const result = [];
+
+
+    function walk(
+        current
+    ){
+
+        if(
+            !current
+        ){
+
+            return;
+
+        }
+
+
+        if(
+            Array.isArray(current)
+        ){
+
+            current.forEach(
+                item =>
+                    walk(item)
+            );
+
+            return;
+
+        }
+
+
+        if(
+            typeof current !== "object"
+        ){
+
+            return;
+
+        }
+
+
+        const text =
+            current.text ||
+            current.content ||
+            current.tafsirText ||
+            (
+                current.tafsir &&
+                typeof current.tafsir === "string"
+                ? current.tafsir
+                : ""
+            );
+
+
+        if(
+            text
+        ){
+
+            result.push(
+                current
+            );
+
+            return;
+
+        }
+
+
+        Object
+            .values(current)
+            .forEach(
+                child =>
+                    walk(child)
+            );
+
+    }
+
+
+    walk(value);
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   EXTRACT TAFSEER TEXT
+========================================================= */
+
+function extractTafseerText(
+    item
+){
+
+    if(
+        !item
+    ){
+
+        return "";
+
+    }
+
+
+    if(
+        typeof item === "string"
+    ){
+
+        return item;
+
+    }
+
+
+    if(
+        item.text
+    ){
+
+        return item.text;
+
+    }
+
+
+    if(
+        item.content
+    ){
+
+        return item.content;
+
+    }
+
+
+    if(
+        item.tafsirText
+    ){
+
+        return item.tafsirText;
+
+    }
+
+
+    if(
+        item.tafsir &&
+        typeof item.tafsir === "string"
+    ){
+
+        return item.tafsir;
+
+    }
+
+
+    if(
+        item.tafsir &&
+        item.tafsir.text
+    ){
+
+        return item.tafsir.text;
+
+    }
+
+
+    if(
+        item.ayah &&
+        item.ayah.tafsir
+    ){
+
+        return item.ayah.tafsir;
+
+    }
+
+
+    return "";
+
+}
+
+
+/* =========================================================
+   EXTRACT AYAH NUMBER
+========================================================= */
+
+function extractAyahNumber(
+    item,
+    fallback
+){
+
+    if(
+        !item ||
+        typeof item !== "object"
+    ){
+
+        return fallback;
+
+    }
+
+
+    if(
+        item.ayah
+    ){
+
+        if(
+            typeof item.ayah === "number"
+        ){
+
+            return item.ayah;
+
+        }
+
+        if(
+            item.ayah.number
+        ){
+
+            return item.ayah.number;
+
+        }
+
+    }
+
+
+    if(
+        item.ayahNumber
+    ){
+
+        return item.ayahNumber;
+
+    }
+
+
+    if(
+        item.verse_number
+    ){
+
+        return item.verse_number;
+
+    }
+
+
+    if(
+        item.verseNumber
+    ){
+
+        return item.verseNumber;
+
+    }
+
+
+    return fallback;
+
+}
+
+
+/* =========================================================
+   PLAY SINGLE AUDIO
+========================================================= */
+
+function playAudio(
+    audioUrl,
+    runId
+){
+
+    return new Promise(
+        resolve => {
+
+            const audio =
+                new Audio(
+                    audioUrl
+                );
+
+
+            window.currentQuranAudio =
+                audio;
+
+
+            let finished =
+                false;
+
+
+            const finish =
+                () => {
+
+                    if(finished){
+
+                        return;
+
+                    }
+
+                    finished =
+                        true;
+
+                    resolve();
+
+                };
+
+
+            audio.onended =
+                finish;
+
+
+            audio.onerror =
+                finish;
+
+
+            if(
+                runId !== playbackRunId
+            ){
+
+                finish();
+
+                return;
+
+            }
+
+
+            audio.play()
+                .catch(
+                    error => {
+
+                        console.error(
+                            "Audio play error:",
+                            error
+                        );
+
+                        finish();
+
+                    }
+                );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   PLAY QURAN AYAH
+========================================================= */
+
+async function playAyah(
+    index,
+    runId
+){
+
+    if(
+        !currentSurah ||
+        !currentSurah.ayahs[index]
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        runId !== playbackRunId
+    ){
+
+        return;
+
+    }
+
+
+    currentAyahIndex =
+        index;
+
+
+    highlightAyah(
+        index
+    );
+
+
+    const ayah =
+        currentSurah.ayahs[index];
+
+
+    recitationStatus.textContent =
+        selectedLanguage === "ur"
+        ? `▶ آیت ${index + 1} چل رہی ہے`
+        : selectedLanguage === "ar"
+        ? `▶ يتم تشغيل الآية ${index + 1}`
+        : `▶ Playing Ayah ${index + 1}`;
+
+
+    const audioUrl =
+        `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayah.number}.mp3`;
+
+
+    await playAudio(
+        audioUrl,
+        runId
+    );
+
+}
+
+
+/* =========================================================
+   PLAY BISMILLAH
+========================================================= */
+
+async function playBismillah(
+    runId
+){
+
+    if(
+        runId !== playbackRunId
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        !currentSurah ||
+        Number(currentSurah.number) === 1
+    ){
+
+        return;
+
+    }
+
+
+    recitationStatus.textContent =
+        selectedLanguage === "ur"
+        ? "▶ بسم اللہ الرحمن الرحیم"
+        : selectedLanguage === "ar"
+        ? "▶ بسم الله الرحمن الرحيم"
+        : "▶ Bismillah-ir-Rahman-ir-Raheem";
+
+
+    const bismillahAudio =
+        "https://cdn.islamic.network/quran/audio/128/ar.alafasy/1.mp3";
+
+
+    await playAudio(
+        bismillahAudio,
+        runId
+    );
+
+}
+
+
+/* =========================================================
+   PLAY SURAH
+========================================================= */
+
+async function playSurah(){
+
+    if(
+        !currentSurah ||
+        !currentSurah.ayahs ||
+        !currentSurah.ayahs.length
+    ){
+
+        return;
+
+    }
+
+
+    stopEverything(false);
+
+
+    const runId =
+        ++playbackRunId;
+
+
+    isPlaying =
+        true;
+
+
+    recitationStatus.textContent =
+        selectedLanguage === "ur"
+        ? "▶ قرآن کی تلاوت شروع ہو گئی ہے"
+        : selectedLanguage === "ar"
+        ? "▶ بدأت تلاوة القرآن"
+        : "▶ Quran recitation started";
+
+
+    if(
+        Number(currentSurah.number) !== 1
+    ){
+
+        await playBismillah(
+            runId
+        );
+
+    }
+
+
+    if(
+        runId !== playbackRunId
+    ){
+
+        return;
+
+    }
+
+
+    for(
+        let i = 0;
+        i < currentSurah.ayahs.length;
+        i++
+    ){
+
+        if(
+            runId !== playbackRunId
+        ){
+
+            break;
+
+        }
+
+
+        await playAyah(
+            i,
+            runId
+        );
+
+    }
+
+
+    if(
+        runId === playbackRunId
+    ){
+
+        isPlaying =
+            false;
+
+
+        recitationStatus.textContent =
+            selectedLanguage === "ur"
+            ? "قرآن کی تلاوت مکمل ہو گئی۔"
+            : selectedLanguage === "ar"
+            ? "اكتملت تلاوة القرآن."
+            : "Quran recitation completed.";
+
+    }
+
+}
+
+
+/* =========================================================
+   LISTEN BUTTON
+========================================================= */
+
+document
+    .getElementById("listenBtn")
+    .addEventListener(
+        "click",
+        () => {
+
+            playSurah();
+
+        }
+    );
+
+
+/* =========================================================
+   HIGHLIGHT AYAH
+========================================================= */
+
+function highlightAyah(
+    index
+){
+
+    document
+        .querySelectorAll(
+            ".ayah-card"
+        )
+        .forEach(
+            card =>
+                card.classList.remove(
+                    "active"
+                )
+        );
+
+
+    const card =
+        document.getElementById(
+            `ayah-${index}`
+        );
+
+
+    if(card){
+
+        card.classList.add(
+            "active"
+        );
+
+
+        card.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+    }
+
+}
+
+
+/* =========================================================
+   RECITATION RECOGNITION
+========================================================= */
+
+function setupRecognition(){
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    if(
+        !SpeechRecognition
+    ){
+
+        console.warn(
+            "Speech recognition not supported."
+        );
+
+
+        return null;
+
+    }
+
+
+    const rec =
+        new SpeechRecognition();
+
+
+    rec.continuous =
+        false;
+
+
+    rec.interimResults =
+        true;
+
+
+    rec.maxAlternatives =
+        3;
+
+
+    rec.lang =
+        "ar-SA";
+
+
+    return rec;
+
+}
+
+
+/* =========================================================
+   NORMALIZE ARABIC
+========================================================= */
+
+function normalizeArabic(
+    text
+){
+
+    return String(
+        text || ""
+    )
+
+    .replace(
+        /[\u064B-\u065F\u0670]/g,
+        ""
+    )
+
+    .replace(
+        /ٱ/g,
+        "ا"
+    )
+
+    .replace(
+        /أ|إ|آ/g,
+        "ا"
+    )
+
+    .replace(
+        /ى/g,
+        "ي"
+    )
+
+    .replace(
+        /ة/g,
+        "ه"
+    )
+
+    .replace(
+        /ـ/g,
+        ""
+    )
+
+    .replace(
+        /[^\u0621-\u063A\u0641-\u064A\s]/g,
+        " "
+    )
+
+    .replace(
+        /\s+/g,
+        " "
+    )
+
+    .trim();
+
+}
+
+
+/* =========================================================
+   SIMILARITY
+========================================================= */
+
+function similarity(
+    a,
+    b
+){
+
+    a =
+        normalizeArabic(a)
+        .replace(
+            /\s/g,
+            ""
+        );
+
+
+    b =
+        normalizeArabic(b)
+        .replace(
+            /\s/g,
+            ""
+        );
+
+
+    if(
+        !a ||
+        !b
+    ){
+
+        return 0;
+
+    }
+
+
+    const maxLength =
+        Math.max(
+            a.length,
+            b.length
+        );
+
+
+    let same =
+        0;
+
+
+    const minLength =
+        Math.min(
+            a.length,
+            b.length
+        );
+
+
+    for(
+        let i = 0;
+        i < minLength;
+        i++
+    ){
+
+        if(
+            a[i] === b[i]
+        ){
+
+            same++;
+
+        }
+
+    }
+
+
+    return same /
+        maxLength;
+
+}
+
+
+/* =========================================================
+   CHECK RECITATION
+========================================================= */
+
+function checkRecitation(
+    spoken,
+    expected
+){
+
+    const score =
+        similarity(
+            spoken,
+            expected
+        );
+
+
+    return {
+
+        score,
+
+        correct:
+            score >= .65
+
+    };
+
+}
+
+
+/* =========================================================
+   START RECITATION
+========================================================= */
+
+function startRecitation(){
+
+    if(
+        !currentSurah ||
+        !currentSurah.ayahs ||
+        !currentSurah.ayahs.length
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        recognition
+    ){
+
+        try{
+
+            recognition.stop();
+
+        }
+        catch(error){}
+
+    }
+
+
+    recognition =
+        setupRecognition();
+
+
+    if(
+        !recognition
+    ){
+
+        recitationStatus.textContent =
+            selectedLanguage === "ur"
+            ? "اس براؤزر میں اسپیچ ریکگنیشن موجود نہیں۔"
+            : selectedLanguage === "ar"
+            ? "التعرف على الكلام غير مدعوم في هذا المتصفح."
+            : "Speech recognition is not supported in this browser.";
+
+        return;
+
+    }
+
+
+    const index =
+        currentAyahIndex;
+
+
+    const ayah =
+        currentSurah.ayahs[index];
+
+
+    highlightAyah(
+        index
+    );
+
+
+    recitationStatus.textContent =
+        selectedLanguage === "ur"
+        ? `🎤 آیت ${index + 1} کی تلاوت کریں`
+        : selectedLanguage === "ar"
+        ? `🎤 اقرأ الآية ${index + 1}`
+        : `🎤 Recite Ayah ${index + 1}`;
+
+
+    isRecognizing =
+        true;
+
+
+    recognition.onstart =
+        () => {
+
+            isRecognizing =
+                true;
+
+
+            recitationStatus.textContent =
+                selectedLanguage === "ur"
+                ? `🎤 سن رہا ہوں... آیت ${index + 1} پڑھیں`
+                : selectedLanguage === "ar"
+                ? `🎤 أستمع... اقرأ الآية ${index + 1}`
+                : `🎤 Listening... Recite Ayah ${index + 1}`;
+
+        };
+
+
+    recognition.onresult =
+        event => {
+
+            let transcript =
+                "";
+
+
+            for(
+                let i = event.resultIndex;
+                i < event.results.length;
+                i++
+            ){
+
+                transcript +=
+                    event.results[i][0].transcript;
+
+            }
+
+
+            transcript =
+                transcript.trim();
+
+
+            console.log(
+                "Student recitation:",
+                transcript
+            );
+
+
+            if(
+                !transcript
+            ){
+
+                return;
+
+            }
+
+
+            const result =
+                checkRecitation(
+                    transcript,
+                    ayah.text
+                );
+
+
+            const card =
+                document.getElementById(
+                    `ayah-${index}`
+                );
+
+
+            if(card){
+
+                card.classList.remove(
+                    "correct",
+                    "wrong"
+                );
+
+
+                if(
+                    result.correct
+                ){
+
+                    card.classList.add(
+                        "correct"
+                    );
+
+
+                    recitationStatus.textContent =
+                        selectedLanguage === "ur"
+                        ? "✅ تلاوت درست لگ رہی ہے۔"
+                        : selectedLanguage === "ar"
+                        ? "✅ تبدو التلاوة صحيحة."
+                        : "✅ Recitation looks correct.";
+
+                }
+                else{
+
+                    card.classList.add(
+                        "wrong"
+                    );
+
+
+                    recitationStatus.textContent =
+                        selectedLanguage === "ur"
+                        ? "❌ براہ کرم اس آیت کو دوبارہ پڑھیں۔"
+                        : selectedLanguage === "ar"
+                        ? "❌ حاول قراءة الآية مرة أخرى."
+                        : "❌ Please try this ayah again.";
+
+                }
+
+            }
+
+        };
+
+
+    recognition.onerror =
+        error => {
+
+            console.error(
+                "Recognition error:",
+                error
+            );
+
+
+            isRecognizing =
+                false;
+
+
+            recitationStatus.textContent =
+                selectedLanguage === "ur"
+                ? "تلاوت سنائی نہیں دی۔ دوبارہ کوشش کریں۔"
+                : selectedLanguage === "ar"
+                ? "تعذر سماع التلاوة. حاول مرة أخرى."
+                : "Could not hear the recitation. Please try again.";
+
+        };
+
+
+    recognition.onend =
+        () => {
+
+            isRecognizing =
+                false;
+
+        };
+
+
+    try{
+
+        recognition.start();
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   RECITE BUTTON
+========================================================= */
+
+document
+    .getElementById("reciteBtn")
+    .addEventListener(
+        "click",
+        startRecitation
+    );
+
+
+/* =========================================================
+   TEACHER VOICE REMOVED
+========================================================= */
+
+talkTeacherBtn.addEventListener(
+    "click",
+    () => {
+
+        teacherMessage.classList.toggle(
+            "rtl",
+            selectedLanguage === "ur" ||
+            selectedLanguage === "ar"
+        );
+
+
+        teacherMessage.textContent =
+            selectedLanguage === "ur"
+            ? "استاد کی وائس گفتگو فی الحال بند ہے۔ قرآن کی تلاوت اور ترجمہ اسکرین پر دستیاب ہیں۔"
+            : selectedLanguage === "ar"
+            ? "المحادثة الصوتية مع المعلم متوقفة حاليًا. تلاوة القرآن والترجمة متاحتان على الشاشة."
+            : "Teacher voice conversation is currently disabled. Quran recitation and translation are available on screen.";
+
+    }
+);
+
+
+/* =========================================================
+   STOP EVERYTHING
+========================================================= */
+
+function stopEverything(
+    updateStatus = true
+){
+
+    playbackRunId++;
+
+
+    isPlaying =
+        false;
+
+
+    if(
+        recognition
+    ){
+
+        try{
+
+            recognition.stop();
+
+        }
+        catch(error){}
+
+    }
+
+
+    isRecognizing =
+        false;
+
+
+    if(
+        window.currentQuranAudio
+    ){
+
+        try{
+
+            window.currentQuranAudio.pause();
+
+            window.currentQuranAudio.currentTime =
+                0;
+
+        }
+        catch(error){}
+
+    }
+
+
+    document
+        .querySelectorAll(
+            ".ayah-card"
+        )
+        .forEach(
+            card => {
+
+                card.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    if(
+        updateStatus
+    ){
+
+        recitationStatus.textContent =
+            selectedLanguage === "ur"
+            ? "تلاوت روک دی گئی۔"
+            : selectedLanguage === "ar"
+            ? "تم إيقاف التلاوة."
+            : "Stopped.";
+
+    }
+
+}
+
+
+/* =========================================================
+   STOP BUTTON
+========================================================= */
+
+document
+    .getElementById("stopBtn")
+    .addEventListener(
+        "click",
+        () => {
+
+            stopEverything();
+
+        }
+    );
+
+
+/* =========================================================
+   TABS
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".tab-btn"
+    )
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                async () => {
+
+                    const tabId =
+                        button.dataset.tab;
+
+
+                    document
+                        .querySelectorAll(
+                            ".tab-btn"
+                        )
+                        .forEach(
+                            btn =>
+                                btn.classList.remove(
+                                    "active"
+                                )
+                        );
+
+
+                    document
+                        .querySelectorAll(
+                            ".tab-content"
+                        )
+                        .forEach(
+                            tab =>
+                                tab.classList.remove(
+                                    "active"
+                                )
+                        );
+
+
+                    button.classList.add(
+                        "active"
+                    );
+
+
+                    const tab =
+                        document.getElementById(
+                            tabId
+                        );
+
+
+                    if(tab){
+
+                        tab.classList.add(
+                            "active"
+                        );
+
+                    }
+
+
+                    /*
+                        Tafseer tab open karte hi
+                        selected Surah ka Tafseer load hoga.
+                    */
+
+                    if(
+                        tabId === "tafseerTab"
+                    ){
+
+                        await loadTafseer();
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+async function initialize(){
+
+    console.log(
+        "Quran AI Teacher starting..."
+    );
+
+
+    console.log(
+        "Selected language:",
+        selectedLanguage
+    );
+
+
+    updateLanguageUI();
+
+
+    await loadSurahs();
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+initialize();
+
+</script>
+
+</body>
+
+</html>
